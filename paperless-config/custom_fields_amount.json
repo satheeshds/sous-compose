@@ -1,0 +1,8 @@
+{
+  "name": "Amount",
+  "data_type": "monetary",
+  "extra_data": {
+    "select_options": [],
+    "default_currency": "INR"
+  }
+}

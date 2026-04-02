@@ -1,0 +1,13 @@
+{
+  "name": "Biller",
+  "data_type": "string",
+  "extra_data": {
+    "select_options": [
+      {
+        "id": null,
+        "label": ""
+      }
+    ],
+    "default_currency": null
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "slug": "bank-statement",
+  "name": "Bank Statement",
+  "match": "Statement of account for the period",
+  "matching_algorithm": 3,
+  "is_insensitive": true,
+  "owner": 3,
+  "user_can_change": true
+}

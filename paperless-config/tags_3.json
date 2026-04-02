@@ -1,0 +1,14 @@
+{
+  "slug": "swiggy-dineout",
+  "name": "swiggy-dineout",
+  "color": "#bf7d40",
+  "text_color": "#000000",
+  "match": "LOB  - DINEOUT",
+  "matching_algorithm": 5,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

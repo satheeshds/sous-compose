@@ -1,0 +1,14 @@
+{
+  "slug": "swiggy",
+  "name": "swiggy",
+  "color": "#FC8019",
+  "text_color": "#000000",
+  "match": "swiggy",
+  "matching_algorithm": 3,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

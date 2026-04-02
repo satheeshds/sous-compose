@@ -1,0 +1,9 @@
+{
+  "slug": "bill",
+  "name": "Bill",
+  "match": "Bill Invoice",
+  "matching_algorithm": 1,
+  "is_insensitive": true,
+  "owner": 3,
+  "user_can_change": true
+}

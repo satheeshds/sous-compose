@@ -1,0 +1,9 @@
+{
+  "slug": "payout",
+  "name": "Payout",
+  "match": "Payout",
+  "matching_algorithm": 5,
+  "is_insensitive": true,
+  "owner": 3,
+  "user_can_change": true
+}

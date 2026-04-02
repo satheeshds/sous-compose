@@ -1,0 +1,14 @@
+{
+  "slug": "zomato",
+  "name": "zomato",
+  "color": "#E23744",
+  "text_color": "#ffffff",
+  "match": "zomato",
+  "matching_algorithm": 3,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

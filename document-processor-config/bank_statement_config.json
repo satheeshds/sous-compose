@@ -1,0 +1,13 @@
+{
+    "transaction_date": "date",
+    "value_date": "date",
+    "description": "description",
+    "debit_amount": "amount",
+    "credit_amount": "amount",
+    "transaction_type": "type",
+    "narration": "description",
+    "withdrawal_amount": "amount",
+    "deposit_amount": "amount",
+    "balance": "balance",
+    "cheque_number": "reference"
+}

@@ -1,0 +1,45 @@
+// Payout upload example - swiggy
+POST http://localhost:8070/payouts HTTP/1.1
+content-type: application/json
+
+{
+    "doc_url": "http://webserver:8000/documents/95"
+}
+
+###
+// Bank statement upload example
+POST http://localhost:8070/bank-statements HTTP/1.1
+content-type: application/json
+
+{
+    "doc_url": "http://webserver:8000/documents/160"
+}
+
+// payout example - swiggy dineout
+###
+POST http://localhost:8070/payouts HTTP/1.1
+content-type: application/json
+
+{
+    "doc_url": "http://webserver:8000/documents/90"
+}
+
+//payout example - zomato
+###
+POST http://localhost:8070/payouts HTTP/1.1
+content-type: application/json
+
+{
+    "doc_url": "http://webserver:8000/documents/93"
+}
+
+
+###
+GET http://localhost:8091/parse?file_path=/data/documents/originals/2022/01/invoice_01.xlsx&sheet_name=Addition Deductions Details&range=B6:I&has_header=true&stop_at_empty=true&as_table=true HTTP/1.1
+
+
+### matching transaction example
+GET http://localhost:8090/api/v1/transactions/254/match-suggestions HTTP/1.1
+
+### matching transaction example
+GET http://localhost:8090/api/v1/transactions/254 HTTP/1.1
