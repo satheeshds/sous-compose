@@ -159,14 +159,14 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB:       ${POSTGRES_DB:-lake_catalog}
-      POSTGRES_USER:     ${POSTGRES_USER:-nexus}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_USER:     ${NEXUS_POSTGRES_USER:-nexus}
+      POSTGRES_PASSWORD: ${NEXUS_POSTGRES_PASSWORD:-changeme}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-nexus} -d ${POSTGRES_DB:-lake_catalog}"]
+      test: ["CMD-SHELL", "pg_isready -U ${NEXUS_POSTGRES_USER:-nexus} -d ${POSTGRES_DB:-lake_catalog}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -226,7 +226,7 @@ services:
       NEXUS_POSTGRES_HOST:     postgres
       NEXUS_POSTGRES_PORT:     5432
       NEXUS_POSTGRES_USER:     ${NEXUS_POSTGRES_USER:-nexus}
-      NEXUS_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      NEXUS_POSTGRES_PASSWORD: ${NEXUS_POSTGRES_PASSWORD:-changeme}
       NEXUS_POSTGRES_DBNAME:   ${POSTGRES_DB:-lake_catalog}
       NEXUS_MINIO_ENDPOINT:    minio:9000
       NEXUS_MINIO_ACCESS_KEY:  ${MINIO_ROOT_USER:-minioadmin}
@@ -258,7 +258,7 @@ services:
       NEXUS_POSTGRES_HOST:     postgres
       NEXUS_POSTGRES_PORT:     5432
       NEXUS_POSTGRES_USER:     ${NEXUS_POSTGRES_USER:-nexus}
-      NEXUS_POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      NEXUS_POSTGRES_PASSWORD: ${NEXUS_POSTGRES_PASSWORD:-changeme}
       NEXUS_POSTGRES_DBNAME:   ${POSTGRES_DB:-lake_catalog}
       NEXUS_MINIO_ENDPOINT:    minio:9000
       NEXUS_MINIO_ACCESS_KEY:  ${MINIO_ROOT_USER:-minioadmin}
