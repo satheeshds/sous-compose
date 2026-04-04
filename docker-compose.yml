@@ -95,12 +95,68 @@ services:
       - "gotenberg"
       - "--chromium-disable-javascript=true"
       - "--chromium-allow-list=file:///tmp/.*"
-  
+
+  docai-lifecycle:
+    image: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
+    restart: unless-stopped
+    stop_grace_period: 30s
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /config/service-account.json
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+      GOOGLE_CLOUD_LOCATION: ${GOOGLE_CLOUD_LOCATION:-us}
+      DOC_AI_PROCESSOR_IDS: ${DOCUMENT_AI_PROCESSOR_ID},${BANK_STATEMENT_PROCESSOR_ID}
+    volumes:
+      - ./document-processor-config/service-account.json:/config/service-account.json:ro
+    command: >
+      /bin/sh -c "trap 'exit 0' TERM INT; while :; do sleep 3600; done"
+    post_start:
+      - command: >
+          /bin/sh -lc '
+          gcloud auth activate-service-account --key-file="$$GOOGLE_APPLICATION_CREDENTIALS" --quiet;
+          ACCESS_TOKEN="$$(gcloud auth print-access-token)";
+          for ID in $$(echo "$$DOC_AI_PROCESSOR_IDS" | tr "," " "); do
+            [ -n "$$ID" ] || continue;
+            STATE=$$(curl -fsS -H "Authorization: Bearer $$ACCESS_TOKEN" \
+              "https://$${GOOGLE_CLOUD_LOCATION}-documentai.googleapis.com/v1/projects/$${GOOGLE_CLOUD_PROJECT}/locations/$${GOOGLE_CLOUD_LOCATION}/processors/$$ID" \
+              | sed -n "s/.*\"state\": *\"\([^\"]*\)\".*/\1/p" | head -n 1);
+            if [ "$$STATE" != "ENABLED" ]; then
+              echo "Enabling Doc AI processor $$ID";
+              curl -fsS -X POST -H "Authorization: Bearer $$ACCESS_TOKEN" \
+                "https://$${GOOGLE_CLOUD_LOCATION}-documentai.googleapis.com/v1/projects/$${GOOGLE_CLOUD_PROJECT}/locations/$${GOOGLE_CLOUD_LOCATION}/processors/$$ID:enable";
+            fi;
+          done;
+          touch /tmp/docai-enabled
+          '
+    pre_stop:
+      - command: >
+          /bin/sh -lc '
+          gcloud auth activate-service-account --key-file="$$GOOGLE_APPLICATION_CREDENTIALS" --quiet;
+          ACCESS_TOKEN="$$(gcloud auth print-access-token)";
+          for ID in $$(echo "$$DOC_AI_PROCESSOR_IDS" | tr "," " "); do
+            [ -n "$$ID" ] || continue;
+            STATE=$$(curl -fsS -H "Authorization: Bearer $$ACCESS_TOKEN" \
+              "https://$${GOOGLE_CLOUD_LOCATION}-documentai.googleapis.com/v1/projects/$${GOOGLE_CLOUD_PROJECT}/locations/$${GOOGLE_CLOUD_LOCATION}/processors/$$ID" \
+              | sed -n "s/.*\"state\": *\"\([^\"]*\)\".*/\1/p" | head -n 1);
+            if [ "$$STATE" != "DISABLED" ]; then
+              echo "Disabling Doc AI processor $$ID";
+              curl -fsS -X POST -H "Authorization: Bearer $$ACCESS_TOKEN" \
+                "https://$${GOOGLE_CLOUD_LOCATION}-documentai.googleapis.com/v1/projects/$${GOOGLE_CLOUD_PROJECT}/locations/$${GOOGLE_CLOUD_LOCATION}/processors/$$ID:disable";
+            fi;
+          done
+          '
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /tmp/docai-enabled"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
   document-processor:
     image: satheeshds/paperless-document-processor:latest
     restart: unless-stopped
     depends_on:
       webserver:
+        condition: service_healthy
+      docai-lifecycle:
         condition: service_healthy
     ports:
      - "8070:80"
@@ -136,11 +192,28 @@ services:
         condition: service_healthy
     ports:
       - "8090:80"
-    volumes:
-      - portal-data:/data
     environment:
-      DB_PATH: /data/portal.db
       LOG_LEVEL: debug
+      NEXUS_HOST: nexus-gateway
+      NEXUS_PORT: 5433
+      NEXUS_USER: portal
+      NEXUS_PASSWORD: ${NEXUS_PASSWORD}
+      NEXUS_DATABASE: lake
+      NEXUS_CONTROL_URL: http://nexus-control:8080
+      ADMIN_API_KEY: ${ADMIN_API_KEY}
+  
+  platform:
+    image: satheeshds/platform:latest
+    environment:
+      NEXUS_HOST: nexus-gateway
+      NEXUS_PORT: 5433
+      NEXUS_CONTROL_URL: http://nexus-control:8080
+      ADMIN_API_KEY: ${ADMIN_API_KEY}
+      LOG_LEVEL: info
+    restart: unless-stopped
+    depends_on:
+      - nexus-gateway
+      - nexus-control
 
   libreoffice-parser:
     image: libreoffice-parser:latest
@@ -274,4 +347,3 @@ volumes:
   media:
   pgdata:
   redisdata:
-  portal-data:
