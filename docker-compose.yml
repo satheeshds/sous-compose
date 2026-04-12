@@ -27,7 +27,7 @@
 services:
   broker:
     image: docker.io/library/redis:8
-    profiles: ["paperless"]
+    profiles: ["paperless", "all"]
     restart: unless-stopped
     volumes:
       - redisdata:/data
@@ -43,7 +43,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   webserver:
     image: ghcr.io/paperless-ngx/paperless-ngx:latest
-    profiles: ["paperless"]
+    profiles: ["paperless", "all"]
     restart: unless-stopped
     depends_on:
       - db
@@ -85,7 +85,7 @@ services:
 
   tika:
     image: docker.io/apache/tika:latest
-    profiles: ["paperless"]
+    profiles: ["paperless", "all"]
     restart: unless-stopped
     ports:
       - "9998:9998"
@@ -103,7 +103,7 @@ services:
 
   docai-lifecycle:
     image: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
-    profiles: ["processing"]
+    profiles: ["processing", "all"]
     restart: unless-stopped
     stop_grace_period: 30s
     environment:
@@ -158,7 +158,7 @@ services:
 
   document-processor:
     image: satheeshds/paperless-document-processor:latest
-    profiles: ["processing"]
+    profiles: ["processing", "all"]
     restart: unless-stopped
     depends_on:
       webserver:
@@ -194,7 +194,7 @@ services:
   portal:
     image: satheeshds/portal:latest
     restart: unless-stopped
-    profiles: ["platform"]
+    profiles: ["platform", "all", "portal"]
     # depends_on:
     #   webserver:
     #     condition: service_healthy
@@ -212,7 +212,7 @@ services:
   
   platform:
     image: satheeshds/platform:latest
-    profiles: ["platform"]
+    profiles: ["platform", "all", "portal"]
     environment:
       NEXUS_HOST: nexus-gateway
       NEXUS_PORT: 5433
@@ -226,7 +226,7 @@ services:
 
   libreoffice-parser:
     image: libreoffice-parser:latest
-    profiles: ["processing"]
+    profiles: ["processing", "all"]
     restart: unless-stopped
     # depends_on:
     #   webserver:
@@ -239,7 +239,7 @@ services:
     # ── Metadata Catalog ─────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    profiles: ["nexus"]
+    profiles: ["nexus", "all", "portal"]
     restart: unless-stopped
     environment:
       POSTGRES_DB:       ${POSTGRES_DB:-lake_catalog}
@@ -258,7 +258,7 @@ services:
   # ── Object Storage ───────────────────────────────────────────────────────────
   minio:
     image: minio/minio:latest
-    profiles: ["nexus"]
+    profiles: ["nexus", "all", "portal"]
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
@@ -278,7 +278,7 @@ services:
   # ── Bootstrap MinIO bucket ───────────────────────────────────────────────────
   minio-init:
     image: minio/mc:latest
-    profiles: ["nexus"]
+    profiles: ["nexus", "all", "portal"]
     depends_on:
       minio:
         condition: service_healthy
@@ -297,7 +297,7 @@ services:
   # ── Nexus Control Plane ──────────────────────────────────────────────────────
   nexus-control:
     image: nexus-control:latest
-    profiles: ["nexus"]
+    profiles: ["nexus", "all", "portal"]
     # build:
       # context: .
       # dockerfile: deploy/Dockerfile.control
@@ -330,7 +330,7 @@ services:
   # ── Nexus Query Gateway (pgwire) ─────────────────────────────────────────────
   nexus-gateway:
     image: nexus-gateway:latest
-    profiles: ["nexus"]
+    profiles: ["nexus", "all", "portal"]
     # build:
       # context: .
       # dockerfile: deploy/Dockerfile.gateway
