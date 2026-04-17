@@ -25,6 +25,19 @@
 # For more extensive installation and update instructions, refer to the
 # documentation.
 services:
+  log-watcher:
+    image: satheeshds/log-watcher:latest
+    profiles: ["logs", "all"]
+    restart: unless-stopped
+    depends_on:
+      - broker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Mandatory for Docker API
+    environment:
+      LINEAR_API_KEY: ${LINEAR_API_KEY}
+      LINEAR_TEAM_ID: ${LINEAR_TEAM_ID}
+      REDIS_ADDR: broker:6379
+   
   broker:
     image: docker.io/library/redis:8
     profiles: ["paperless", "all"]
@@ -33,7 +46,7 @@ services:
       - redisdata:/data
   db:
     image: docker.io/library/postgres:18
-    profiles: ["paperless"]
+    profiles: ["paperless", "all"]
     restart: unless-stopped
     volumes:
       - pgdata:/var/lib/postgresql
@@ -158,6 +171,9 @@ services:
 
   document-processor:
     image: satheeshds/paperless-document-processor:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=ccf1d782-3681-4ef4-94e9-c3127a2d9efe"
     profiles: ["processing", "all"]
     restart: unless-stopped
     depends_on:
@@ -193,6 +209,9 @@ services:
 
   portal:
     image: satheeshds/portal:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=99384380-8f66-45ff-afe1-b5ce42952b1a"
     restart: unless-stopped
     profiles: ["platform", "all", "portal"]
     # depends_on:
@@ -205,13 +224,15 @@ services:
       NEXUS_HOST: nexus-gateway
       NEXUS_PORT: 5433
       NEXUS_USER: portal
-      NEXUS_PASSWORD: ${NEXUS_PASSWORD}
       NEXUS_DATABASE: lake
       NEXUS_CONTROL_URL: http://nexus-control:8080
       ADMIN_API_KEY: ${ADMIN_API_KEY}
   
   platform:
     image: satheeshds/platform:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=99384380-8f66-45ff-afe1-b5ce42952b1a"
     profiles: ["platform", "all", "portal"]
     environment:
       NEXUS_HOST: nexus-gateway
@@ -226,6 +247,9 @@ services:
 
   libreoffice-parser:
     image: libreoffice-parser:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=ccf1d782-3681-4ef4-94e9-c3127a2d9efe"
     profiles: ["processing", "all"]
     restart: unless-stopped
     # depends_on:
@@ -297,6 +321,9 @@ services:
   # ── Nexus Control Plane ──────────────────────────────────────────────────────
   nexus-control:
     image: nexus-control:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=eda58048-d65f-4253-9a55-0781fcd65bb1"
     profiles: ["nexus", "all", "portal"]
     # build:
       # context: .
@@ -330,6 +357,9 @@ services:
   # ── Nexus Query Gateway (pgwire) ─────────────────────────────────────────────
   nexus-gateway:
     image: nexus-gateway:latest
+    labels:
+      - "watchlog.monitor=true"
+      - "linear.project=eda58048-d65f-4253-9a55-0781fcd65bb1"
     profiles: ["nexus", "all", "portal"]
     # build:
       # context: .
