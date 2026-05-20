@@ -105,7 +105,7 @@ services:
 
   gotenberg:
     image: docker.io/gotenberg/gotenberg:8.25
-    profiles: ["paperless"]
+    profiles: ["paperless", "all"]
     restart: unless-stopped
     # The gotenberg chromium route is used to convert .eml files. We do not
     # want to allow external content like tracking pixels or even javascript.
@@ -168,7 +168,7 @@ services:
       GOOGLE_CLOUD_LOCATION: 'us'
       DOCUMENT_AI_PROCESSOR_ID: ${DOCUMENT_AI_PROCESSOR_ID}
       GOOGLE_APPLICATION_CREDENTIALS: /app/config/service-account.json
-      ACCOUNTING_URL: "http://portal"
+      PORTAL_URL: "http://portal"
       TIKA_URL: http://tika:9998
       PAYOUT_EXCEL_DUCKDB_CONFIG_PATH: /app/config/payout-configs.json
       BANK_STATEMENT_PROCESSOR_ID: ${BANK_STATEMENT_PROCESSOR_ID}
@@ -326,6 +326,7 @@ services:
       NEXUS_MINIO_BUCKET:      ${LAKEHOUSE_BUCKET:-lakehouse}
       NEXUS_AUTH_JWT_SECRET:   ${JWT_SECRET:-supersecretkey_change_in_production}
       NEXUS_AUTH_ADMIN_API_KEY: ${ADMIN_API_KEY}
+      NEXUS_AUTH_SERVICE_ACCOUNT_KEY_ENCRYPTION_SECRET: ${JWT_SECRET:-supersecretkey_change_in_production}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
       interval: 10s
@@ -363,6 +364,8 @@ services:
       NEXUS_AUTH_JWT_SECRET:   ${JWT_SECRET:-supersecretkey_change_in_production}
       NEXUS_GATEWAY_PORT:      5433
       LOG_LEVEL:               debug
+    volumes:
+      - media:/app/media:ro
 
 volumes:
   postgres_data:

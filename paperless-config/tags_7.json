@@ -1,0 +1,14 @@
+{
+  "slug": "statuserror",
+  "name": "status:error",
+  "color": "#862d39",
+  "text_color": "#ffffff",
+  "match": "",
+  "matching_algorithm": 0,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

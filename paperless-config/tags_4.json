@@ -1,0 +1,14 @@
+{
+  "slug": "statusnew",
+  "name": "status:new",
+  "color": "#b3cce6",
+  "text_color": "#000000",
+  "match": "",
+  "matching_algorithm": 0,
+  "is_insensitive": true,
+  "is_inbox_tag": true,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

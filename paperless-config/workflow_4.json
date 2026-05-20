@@ -67,7 +67,8 @@
         "use_params": true,
         "as_json": true,
         "params": {
-          "doc_url": "{{doc_url}}"
+          "doc_url": "{{doc_url}}",
+          "tenant_id": "{{custom_fields | get_cf_value('tenant', 'tenant-1') }}"
         },
         "body": null,
         "headers": null,

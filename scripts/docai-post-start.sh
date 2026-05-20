@@ -102,12 +102,40 @@ if [ ! -r "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
   fail "Credentials file is not readable: $GOOGLE_APPLICATION_CREDENTIALS"
 fi
 
+if ! command -v gcloud >/dev/null 2>&1; then
+  fail "gcloud CLI is not available in PATH"
+fi
+
+credentials_size="$(wc -c < "$GOOGLE_APPLICATION_CREDENTIALS" 2>/dev/null || printf 'unknown')"
+credentials_email="$(sed -n 's/.*"client_email"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$GOOGLE_APPLICATION_CREDENTIALS" | head -n 1)"
+log "Credentials file detected: path=$GOOGLE_APPLICATION_CREDENTIALS size=${credentials_size}B client_email=${credentials_email:-unknown}"
+log "gcloud binary: $(command -v gcloud)"
+log "gcloud version: $(gcloud version 2>/dev/null | head -n 1 || printf 'unknown')"
+
 CURRENT_STEP="authenticate with Google Cloud"
 log "Authenticating with Google Cloud"
-if ! gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS" --quiet >/dev/null 2>&1; then
-  fail "Google Cloud authentication failed"
+auth_error_file="$(mktemp)"
+if ! gcloud auth activate-service-account --key-file="$GOOGLE_APPLICATION_CREDENTIALS" --quiet >/dev/null 2>"$auth_error_file"; then
+  auth_error="$(tr '\n' ' ' < "$auth_error_file" | sed 's/[[:space:]]\+/ /g')"
+  rm -f "$auth_error_file"
+  fail "Google Cloud authentication failed: ${auth_error:-no stderr output from gcloud}"
 fi
-ACCESS_TOKEN="$(gcloud auth print-access-token)"
+rm -f "$auth_error_file"
+
+active_account="$(gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>/dev/null | head -n 1 || true)"
+log "Google Cloud authentication succeeded: active_account=${active_account:-unknown}"
+
+token_error_file="$(mktemp)"
+if ! ACCESS_TOKEN="$(gcloud auth print-access-token 2>"$token_error_file")"; then
+  token_error="$(tr '\n' ' ' < "$token_error_file" | sed 's/[[:space:]]\+/ /g')"
+  rm -f "$token_error_file"
+  fail "Unable to fetch Google Cloud access token: ${token_error:-no stderr output from gcloud}"
+fi
+rm -f "$token_error_file"
+
+if [ -z "$ACCESS_TOKEN" ]; then
+  fail "Google Cloud access token is empty"
+fi
 
 processor_count=0
 for ID in $(printf '%s' "$DOC_AI_PROCESSOR_IDS" | tr ',' ' '); do

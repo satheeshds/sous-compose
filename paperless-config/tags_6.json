@@ -1,0 +1,14 @@
+{
+  "slug": "statuscompleted",
+  "name": "status:completed",
+  "color": "#2d862d",
+  "text_color": "#ffffff",
+  "match": "",
+  "matching_algorithm": 0,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

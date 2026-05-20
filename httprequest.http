@@ -3,7 +3,8 @@ POST http://localhost:8070/payouts HTTP/1.1
 content-type: application/json
 
 {
-    "doc_url": "http://webserver:8000/documents/95"
+    "doc_url": "http://webserver:8000/documents/69",
+    "tenant_id": "noodle_house_9672c04f"       
 }
 
 ###

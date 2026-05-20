@@ -1,0 +1,14 @@
+{
+  "slug": "statusprocessing",
+  "name": "status:processing",
+  "color": "#b5bf40",
+  "text_color": "#000000",
+  "match": "",
+  "matching_algorithm": 0,
+  "is_insensitive": true,
+  "is_inbox_tag": false,
+  "owner": 3,
+  "user_can_change": true,
+  "parent": null,
+  "children": []
+}

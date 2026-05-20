@@ -7,14 +7,18 @@
                     "table_name": "swiggy_order_level",
                     "sheet": "Order Level",
                     "range": "A3:AR",
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 },
                 {
                     "table_name": "swiggy_other_charges_and_deductions",
                     "header": true,
                     "sheet": "Other charges and deductions",
                     "range": "A5:H",
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 },
                 {
                     "table_name": "swiggy_other_charges_and_deductions",
@@ -24,7 +28,9 @@
                         "relative_config_index": 1,
                         "rows_offset": 3
                     },
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 },
                 {
                     "table_name": "swiggy_payout_details",
@@ -32,7 +38,8 @@
                     "sheet": "Summary",
                     "range": "B11:C16",
                     "stop_at_empty": true,
-                    "all_varchar": true
+                    "all_varchar": true,
+                    "ignore_errors": true
                 }
             ],
             "export_configs": [
@@ -109,21 +116,27 @@
                     "table_name": "swiggy_dineout_order_level",
                     "sheet": "All Orders",
                     "range": "A2:AL",
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 },
                 {
                     "header": true,
                     "table_name": "swiggy_dineout_discounts_pnl",
                     "sheet": "Discounts P&L",
                     "range": "B9:K",
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 },
                 {
                     "header": true,
                     "table_name": "swiggy_dineout_summary",
                     "sheet": "Summary",
                     "range": "B17:C18",
-                    "stop_at_empty": true
+                    "stop_at_empty": true,
+                    "empty_as_varchar": true,
+                    "ignore_errors": true
                 }
             ],
             "export_configs": [

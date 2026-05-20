@@ -1,0 +1,8 @@
+{
+  "name": "tenant",
+  "data_type": "string",
+  "extra_data": {
+    "select_options": [],
+    "default_currency": null
+  }
+}

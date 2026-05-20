@@ -1,6 +1,6 @@
 {
-  "name": "invoice hook",
-  "order": 2,
+  "name": "bank statement hook",
+  "order": 4,
   "enabled": true,
   "triggers": [
     {
@@ -20,7 +20,7 @@
       "filter_has_not_document_types": [],
       "filter_has_not_storage_paths": [],
       "filter_has_correspondent": null,
-      "filter_has_document_type": 1,
+      "filter_has_document_type": 3,
       "filter_has_storage_path": null,
       "schedule_offset_days": 0,
       "schedule_is_recurring": false,
@@ -63,7 +63,7 @@
       "remove_change_groups": [],
       "email": null,
       "webhook": {
-        "url": "http://document-processor/bills",
+        "url": "http://document-processor/bank-statements",
         "use_params": true,
         "as_json": true,
         "params": {
