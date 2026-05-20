@@ -243,11 +243,11 @@
                         },
                         {
                             "column_name": "TotalOrders",
-                            "expression": "#14"
+                            "expression": "CAST(#14 AS INTEGER)"
                         },
                         {
                             "column_name": "FinalPayoutAmt",
-                            "expression": "#15"
+                            "expression": "CAST(#15 AS DECIMAL)"
                         }
                     ]
                 },
@@ -256,19 +256,19 @@
                     "reader_configs": [
                         {
                             "column_name": "GrossSalesAmt",
-                            "expression": "SUM(#16) FILTER (WHERE #10 = 'DELIVERED')"
+                            "expression": "SUM(CAST(#16 AS DECIMAL)) FILTER (WHERE #10 = 'DELIVERED')"
                         },
                         {
                             "column_name": "RestaurantDiscountAmt",
-                            "expression": "SUM(#19) FILTER (WHERE #10 = 'DELIVERED')"
+                            "expression": "SUM(CAST(#19 AS DECIMAL)) FILTER (WHERE #10 = 'DELIVERED')"
                         },
                         {
                             "column_name": "PlatformCommissionAmt",
-                            "expression": "SUM(#30) FILTER (WHERE #10 = 'DELIVERED')"
+                            "expression": "SUM(CAST(#30 AS DECIMAL)) FILTER (WHERE #10 = 'DELIVERED')"
                         },
                         {
                             "column_name": "TaxesTcsTdsAmt",
-                            "expression": "SUM(#43) FILTER (WHERE #10 = 'DELIVERED')"
+                            "expression": "SUM(CAST(#43 AS DECIMAL)) FILTER (WHERE #10 = 'DELIVERED')"
                         },
                         {
                             "column_name": "SettlementDate",
@@ -281,7 +281,7 @@
                     "reader_configs": [
                         {
                             "column_name": "MarketingAdsAmt",
-                            "expression": "SUM(#8)"
+                            "expression": "SUM(CAST(#8 AS DECIMAL))"
                         }
                     ]
                 }
